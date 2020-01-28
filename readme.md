@@ -49,8 +49,18 @@ sudo -i -u stellar
 cd src
 ```
 
+7. generate your secret key
+```bash
+stellar-core gen-seed
+```
+
 6. initialize folders structure & daemonize workers monitor + merge process
 ```bash
+export DB_HOST=localhost
+export DB_PORT=5432
+export DB_USER=<db_user>
+export DB_PASSWORD=<db_password>
+export NODE_SECRET_KEY=<secret_key> 
 python cli.py initialize
 nohup python cli.py monitor > monitor.log &
 nohup python cli.py merge > merge.log &

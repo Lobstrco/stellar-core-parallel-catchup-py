@@ -2,3 +2,5 @@ worker-*/
 result/
 example.env
 catchup
+*.pyc
+*.log
