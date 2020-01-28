@@ -1,0 +1,15 @@
+version: 2
+jobs:
+  test:
+    machine: true
+    steps:
+      - checkout
+      - run:
+          name: Run Tests
+          command: docker-compose -f test/docker-compose.test.yml up --build --abort-on-container-exit
+
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - test

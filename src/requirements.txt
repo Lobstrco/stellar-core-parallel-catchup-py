@@ -1,0 +1,6 @@
+psutil
+jinja2
+click
+requests
+isort
+flake8

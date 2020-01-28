@@ -1,0 +1,4 @@
+worker-*/
+result/
+example.env
+catchup
