@@ -1,26 +1,28 @@
-0. Make sure, stellar core is not running
+1. Make sure stellar core is not running:
 ```bash
 sudo service stellar-core stop
 ```
 
-1. Setup postgresql to allow high load, change values in /etc/postgresql/10/main/postgresql.conf
+2. Tweak default settings of postgresql for high-performance:
 ```text
 sudo nano /etc/postgresql/10/main/postgresql.conf
-
-change:
-max_locks_per_transaction 5000 (just because)
-max_pred_locks_per_transaction 5000
-max_connections 1500, minimum: cores_number * (cores_number + 1)
-shared_buffers 10GB (up to 25% RAM)
 ```
 
-2. grant superuser permissions to the user
+Change:
+```text
+max_locks_per_transaction 5000
+max_pred_locks_per_transaction 5000
+max_connections 1500
+shared_buffers 10GB # (allocate about 25% of total RAM)
+```
+
+3. Grant superuser permissions to the user:
 ```bash
 sudo -i -u postgres
 psql -c "alter user <db_user> with superuser;"
 ```
 
-3. connect big disk to the server
+4. Connect a large disk to the server (in early 2020 about 2TB would be enough for history and databases)
 ```bash
 lsblk
 # format & create partition if required
@@ -29,7 +31,7 @@ sudo mkdir /mnt/storage
 sudo mount /dev/sdb1 /mnt/storage
 ```
 
-4. move postgresql database to big disk (about 2TB would be ok for history + databases)
+5. Move postgresql database to the temporary disk
 ```bash
 sudo service postgresql stop
 sudo mv sudo mv /var/lib/postgresql/10/main /mnt/storage/
@@ -37,24 +39,24 @@ sudo ln -s /mnt/storage/main /var/lib/postgresql/10/main
 sudo service postgresql start
 ```
 
-5. clone repository
+6. Clone repository
 ```bash
 git clone https://github.com/Lobstrco/stellar-core-parallel-catchup-py.git /mnt/storage/core-parallel-catchup
 sudo chown stellar /mnt/storage/core-parallel-catchup
 ```
 
-6. login as stellar user
+7. Login as stellar user
 ```bash
 sudo -i -u stellar
 cd src
 ```
 
-7. generate your secret key
+8. Generate your secret key
 ```bash
 stellar-core gen-seed
 ```
 
-6. initialize folders structure & daemonize workers monitor + merge process
+9. Initialize folders structure, daemonize workers monitor and merge process. This will take a while:
 ```bash
 export DB_HOST=localhost
 export DB_PORT=5432
@@ -66,12 +68,12 @@ nohup python cli.py monitor > monitor.log &
 nohup python cli.py merge > merge.log &
 ```
 
-7. rename database
+10. Great! You're almost done. Now rename database:
 ```sql
 ALTER DATABASE "catchup-stellar-result" RENAME TO "stellar-core";
 ```
 
-8. move folders to their real destinations
+11. Move folders to their real destinations:
 ```bash
 sudo mv result/data/buckets /var/lib/stellar/
 sudo service postgresql stop
@@ -80,7 +82,7 @@ sudo mv /mnt/storage/main /var/lib/postgresql/10/
 sudo service postgresql start
 ```
 
-9. publish history to the cloud.
+12. Publish history to the cloud.
 ```text
 sudo apt-get install stellar-archivist
 sudo service stellar-core stop
