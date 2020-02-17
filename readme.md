@@ -1,9 +1,27 @@
+# Fast Stellar Core Catch Up
+
+
+## Description
+
+Starting a [full stellar core validator](https://www.stellar.org/developers/stellar-core/software/admin.html) from scratch takes a while, as the node needs to download and process a lot of data during the "Catch up" phase.
+
+The catching up phase usually takes more than a month.  
+This script helps to make the process significantly shorter, as it allows to perform the catch up of multiple ledgers blocks in parallel.
+
+On a powerful server the full catch up using this Python script can be done in less than a day.
+
+Another implementation of the parallel catch up idea is a [shell script by SatoshiPay](https://github.com/satoshipay/stellar-core-parallel-catchup). 
+
+
+## Instructions
+
+
 1. Make sure stellar core is not running:
 ```bash
 sudo service stellar-core stop
 ```
 
-2. Tweak default settings of postgresql for high-performance:
+2. Tweak default settings of postgresql for high performance:
 ```text
 sudo nano /etc/postgresql/10/main/postgresql.conf
 ```
