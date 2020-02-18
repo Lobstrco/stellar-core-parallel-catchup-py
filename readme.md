@@ -13,6 +13,19 @@ On a powerful server the full catch up using this Python script can be done in l
 Another implementation of the parallel catch up idea is a [shell script by SatoshiPay](https://github.com/satoshipay/stellar-core-parallel-catchup). 
 
 
+## Preparation
+
+Due to the parallel nature of the process, the sync time can be significantly decreased with bigger instance type and more CPU and RAM.
+
+So it's recommended to scale up a server instance until the catch up process is complete.
+On the instance similar to c5.12xlarge the full catch up can be completed within 24 hours (please feel free to share your specs and results).
+
+The process also requires a lot of disk space, so we recommend to connect a temporary SSD disk around 2TB in size.
+This temporary disk will be used to store copies of ledger chunks, merging them together in the database.
+
+This script is also designed to publish history archives to a cloud archive like S3.
+
+
 ## Instructions
 
 
@@ -100,7 +113,7 @@ sudo mv /mnt/storage/main /var/lib/postgresql/10/
 sudo service postgresql start
 ```
 
-12. Publish history to the cloud.
+12. Publish history archives to the cloud.
 ```text
 sudo apt-get install stellar-archivist
 sudo service stellar-core stop
