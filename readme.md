@@ -127,6 +127,6 @@ sudo service stellar-core start
 
 sudo -i -u stellar
 /bin/bash
-export $(cat /etc/stellar/stellar-core | xargs) && nohup stellar-archivist repair file:///mnt/storage/parallel-catchup/result/vs/ s3://stellar-archive-<s3_bucket_index>-lobstr --s3region=$AWS_DEFAULT_REGION > archivist-repair.out &
+export $(cat /etc/stellar/stellar-core | xargs) && nohup stellar-archivist repair file:///mnt/storage/parallel-catchup/result/vs/ s3://<aws_s3_history_bucket_name> --s3region=$AWS_DEFAULT_REGION > archivist-repair.out &
 exit
 ```
