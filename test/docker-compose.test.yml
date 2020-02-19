@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: test
+      POSTGRES_PASSWORD: test
+      POSTGRES_DB: test
+
+  stellar-core:
+    build:
+      context: ..
+      dockerfile: test/Dockerfile
+      args:
+        core_version: 12.3.0-30
+    command: bash -c "sleep 10 && /tmp/wait-for-it.sh db:5432 && . /tmp/runtests.sh"
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: test
+      DB_PASSWORD: test
+      NODE_SECRET_KEY: SACVNHJCWDO47B5H4K7P3Y7SE5R6EOAS3PCFADANTEP6DICLHMLFM6VE  # random key, not really secret one
