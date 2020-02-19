@@ -62,7 +62,7 @@ sudo mkdir /mnt/storage
 sudo mount /dev/sdb1 /mnt/storage
 ```
 
-5. Move postgresql database to the temporary disk
+5. Move postgresql database to the temporary disk:
 ```bash
 sudo service postgresql stop
 sudo mv sudo mv /var/lib/postgresql/10/main /mnt/storage/
@@ -70,19 +70,19 @@ sudo ln -s /mnt/storage/main /var/lib/postgresql/10/main
 sudo service postgresql start
 ```
 
-6. Clone repository
+6. Clone repository:
 ```bash
 git clone https://github.com/Lobstrco/stellar-core-parallel-catchup-py.git /mnt/storage/core-parallel-catchup
 sudo chown stellar /mnt/storage/core-parallel-catchup
 ```
 
-7. Login as stellar user
+7. Login as stellar user:
 ```bash
 sudo -i -u stellar
 cd src
 ```
 
-8. Generate your secret key
+8. Generate your secret key - it will be needed for next step:
 ```bash
 stellar-core gen-seed
 ```
@@ -113,7 +113,7 @@ sudo mv /mnt/storage/main /var/lib/postgresql/10/
 sudo service postgresql start
 ```
 
-12. Publish history archives to the cloud.
+12. Publish history archives to the cloud using [stellar-archivist](https://github.com/stellar/go/tree/master/tools/stellar-archivist):
 ```text
 sudo apt-get install stellar-archivist
 sudo service stellar-core stop
@@ -130,3 +130,5 @@ sudo -i -u stellar
 export $(cat /etc/stellar/stellar-core | xargs) && nohup stellar-archivist repair file:///mnt/storage/parallel-catchup/result/vs/ s3://<aws_s3_history_bucket_name> --s3region=$AWS_DEFAULT_REGION > archivist-repair.out &
 exit
 ```
+
+13. It's all done! Now you can detach the temporary disk from the instance, and scale it down to the usual size.
