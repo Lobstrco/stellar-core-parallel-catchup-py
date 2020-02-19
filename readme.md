@@ -1,6 +1,6 @@
 # Fast Stellar Core Catch Up
 
-CI status: [![<CircleCI>](https://circleci.com/gh/Lobstrco/stellar-core-parallel-catchup-py.svg?style=svg)](https://github.com/Lobstrco/stellar-core-parallel-catchup-py)
+CI status: [![<CircleCI>](https://circleci.com/gh/Lobstrco/stellar-core-parallel-catchup-py.svg?style=svg)](https://app.circleci.com/github/Lobstrco/stellar-core-parallel-catchup-py/pipelines)
 
 
 ## Description
