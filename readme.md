@@ -1,5 +1,7 @@
 # Fast Stellar Core Catch Up
 
+CI status: [![<CircleCI>](https://circleci.com/gh/Lobstrco/stellar-core-parallel-catchup-py.svg?style=svg)](https://github.com/Lobstrco/stellar-core-parallel-catchup-py)
+
 
 ## Description
 
@@ -82,29 +84,34 @@ sudo -i -u stellar
 cd src
 ```
 
-8. Generate your secret key - it will be needed for next step:
+8. Install python script requirements from provided requirements.txt
+```bash
+pip install -r requirements.txt 
+```
+
+9. Generate your secret key - it will be needed for next step:
 ```bash
 stellar-core gen-seed
 ```
 
-9. Initialize folders structure, daemonize workers monitor and merge process. This will take a while:
+10. Initialize folders structure, daemonize workers monitor and merge process. This will take a while:
 ```bash
 export DB_HOST=localhost
 export DB_PORT=5432
 export DB_USER=<db_user>
 export DB_PASSWORD=<db_password>
-export NODE_SECRET_KEY=<secret_key> 
+export NODE_SECRET_KEY=<secret_key>
 python cli.py initialize
 nohup python cli.py monitor > monitor.log &
 nohup python cli.py merge > merge.log &
 ```
 
-10. Great! You're almost done. Now rename database:
+11. Great! You're almost done. Now rename database:
 ```sql
 ALTER DATABASE "catchup-stellar-result" RENAME TO "stellar-core";
 ```
 
-11. Move folders to their real destinations:
+12. Move folders to their real destinations:
 ```bash
 sudo mv result/data/buckets /var/lib/stellar/
 sudo service postgresql stop
@@ -113,7 +120,17 @@ sudo mv /mnt/storage/main /var/lib/postgresql/10/
 sudo service postgresql start
 ```
 
-12. Publish history archives to the cloud using [stellar-archivist](https://github.com/stellar/go/tree/master/tools/stellar-archivist):
+13. You're ready to start stellar core node
+```bash
+sudo service stellar-core start
+```
+
+14. (Optional) If you're not going to use stellar horizon, remove HORIZON cursor from core database to re-enable db maintenance
+```bash
+curl localhost:11626/dropcursor?id=HORIZON
+``` 
+
+15. Publish history archives to the cloud using [stellar-archivist](https://github.com/stellar/go/tree/master/tools/stellar-archivist):
 ```text
 sudo apt-get install stellar-archivist
 sudo service stellar-core stop
@@ -131,4 +148,4 @@ export $(cat /etc/stellar/stellar-core | xargs) && nohup stellar-archivist repai
 exit
 ```
 
-13. It's all done! Now you can detach the temporary disk from the instance, and scale it down to the usual size.
+16. It's all done! Now you can detach the temporary disk from the instance, and scale it down to the usual size.
